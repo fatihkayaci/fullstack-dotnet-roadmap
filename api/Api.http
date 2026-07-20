@@ -1,0 +1,39 @@
+@Api_HostAddress = http://localhost:5019
+
+GET {{Api_HostAddress}}/api/Product
+Accept: application/json
+
+
+###
+
+GET {{Api_HostAddress}}/api/Product/1
+Accept: application/json
+
+###
+
+POST {{Api_HostAddress}}/api/Product
+Content-Type: application/json
+
+{
+  "id": 7,
+  "name": "Product-07",
+  "price": 700,
+  "stock": 70
+}
+
+###
+
+PUT {{Api_HostAddress}}/api/Product
+Content-Type: application/json
+
+{
+  "name": "Product-07",
+  "price": 700,
+  "stock": 70
+}
+
+###
+DELETE {{Api_HostAddress}}/api/Product/18
+Accept: application/json
+
+###
