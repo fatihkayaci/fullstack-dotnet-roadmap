@@ -1,4 +1,4 @@
-﻿namespace level_01.Entities;
+﻿namespace Api.Entities;
 
 public class Product
 {

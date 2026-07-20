@@ -1,17 +1,17 @@
-@level_01_HostAddress = http://localhost:5019
+@Api_HostAddress = http://localhost:5019
 
-GET {{level_01_HostAddress}}/api/Product
+GET {{Api_HostAddress}}/api/Product
 Accept: application/json
 
 
 ###
 
-GET {{level_01_HostAddress}}/api/Product/1
+GET {{Api_HostAddress}}/api/Product/1
 Accept: application/json
 
 ###
 
-POST {{level_01_HostAddress}}/api/Product
+POST {{Api_HostAddress}}/api/Product
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 ###
 
-PUT {{level_01_HostAddress}}/api/Product
+PUT {{Api_HostAddress}}/api/Product
 Content-Type: application/json
 
 {
@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{level_01_HostAddress}}/api/Product/18
+DELETE {{Api_HostAddress}}/api/Product/18
 Accept: application/json
 
 ###

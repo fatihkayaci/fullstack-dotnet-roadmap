@@ -1,7 +1,7 @@
-﻿using level_01.Entities;
+﻿using Api.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace level_01.Controllers;
+namespace Api.Controllers;
 
 [Route("api/product")]
 [ApiController]
