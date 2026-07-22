@@ -1,59 +1,62 @@
-using Api.Data;
+using Api.Context;
 using Api.DTOs;
 using Api.Entities;
 using Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services;
 
 public class ProductService : IProductService
 {
-    private readonly ProductStore _store;
-    public ProductService(ProductStore store) =>
-        _store = store;
+    private readonly DatabaseContext _context;
+    public ProductService(DatabaseContext context) =>
+        _context = context;
 
-    public IEnumerable<ProductDto> GetAllProducts()
+    public async Task<IEnumerable<ProductDto>> GetAllProducts()
     {
-        IEnumerable<ProductDto> products = _store.Products.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Stock)).ToList();
+        IEnumerable<ProductDto> products = await _context.Products.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Stock)).AsNoTracking().ToListAsync();
         return products;
     }
 
-    public ProductDto GetProduct(int id)
+    public async Task<ProductDto> GetProduct(int id)
     {
-        Product? product = _store.Products.FirstOrDefault(p => p.Id == id);
+        Product? product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null)
             throw new KeyNotFoundException();
+
         return new ProductDto(product.Id, product.Name, product.Price, product.Stock);
     }
 
-    public ProductDto CreateProduct(CreateProductRequest request)
+    public async Task<ProductDto> CreateProduct(CreateProductRequest request)
     {
         Product product = new Product()
             {
-                Id = 7,
                 Name = request.Name,
                 Price = request.Price,
                 Stock = request.Stock
             };
 
-        _store.Products.Add(product);
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
 
         return new ProductDto(product.Id, product.Name, product.Price, product.Stock);
     }
 
-    public void DeleteProduct(int id)
+    public async Task DeleteProduct(int id)
     {
-        Product? product = _store.Products.FirstOrDefault(p => p.Id == id);
+        Product? product = _context.Products.FirstOrDefault(p => p.Id == id);
 
         if (product is null)
             throw new KeyNotFoundException();
 
-        _store.Products.Remove(product);
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
     }
 
-    public void UpdateProduct(int id, UpdateProductRequest request)
+    public async Task UpdateProduct(int id, UpdateProductRequest request)
     {
-        Product? product = _store.Products.FirstOrDefault(p => p.Id == id);
+        Product? product = _context.Products.FirstOrDefault(p => p.Id == id);
 
         if (product is null)
             throw new KeyNotFoundException();
@@ -61,6 +64,6 @@ public class ProductService : IProductService
         product.Name = request.Name;
         product.Price = request.Price;
         product.Stock = request.Stock;
-        
+        await _context.SaveChangesAsync();
     }
 }

@@ -4,9 +4,9 @@ namespace Api.Interfaces;
 
 public interface IProductService
     {
-    public IEnumerable<ProductDto> GetAllProducts();
-    public ProductDto GetProduct(int id);
-    public ProductDto CreateProduct(CreateProductRequest request);
-    public void UpdateProduct(int id, UpdateProductRequest request);
-    public void DeleteProduct(int id);
+    Task<IEnumerable<ProductDto>> GetAllProducts();
+    Task<ProductDto> GetProduct(int id);
+    Task<ProductDto> CreateProduct(CreateProductRequest request);
+    Task UpdateProduct(int id, UpdateProductRequest request);
+    Task DeleteProduct(int id);
 }
