@@ -1,4 +1,6 @@
-﻿using Api.Entities;
+﻿using Api.DTOs;
+using Api.Entities;
+using Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -7,65 +9,43 @@ namespace Api.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
-    List<Product> productsdb = new List<Product>()
-    {
-        new Product() {Id = 1, Name = "Product-01", Price = 100, Stock = 10},
-        new Product() {Id = 2, Name = "Product-02", Price = 200, Stock = 20},
-        new Product() {Id = 3, Name = "Product-03", Price = 300, Stock = 30},
-        new Product() {Id = 4, Name = "Product-04", Price = 400, Stock = 40},
-        new Product() {Id = 5, Name = "Product-05", Price = 500, Stock = 50},
-        new Product() {Id = 6, Name = "Product-06", Price = 600, Stock = 60},        
-    };
+    private readonly IProductService _productService;
 
+    public ProductController(IProductService productService)
+    {
+        _productService = productService;
+    }
     [HttpGet]
-    public ActionResult<List<Product>> AllProducts()
+    public ActionResult<IEnumerable<ProductDto>> AllProducts()
     {
-        IEnumerable<Product> products = productsdb.ToList();
-
+        IEnumerable<ProductDto> products = _productService.GetAllProducts();
         return Ok(products);
     }
 
     [HttpGet("{id}")]
     public ActionResult<Product> Product([FromRoute]int id)
     {
-        Product? product = productsdb.FirstOrDefault(p => p.Id == id);
-        
-        if (product is null)
-            return NotFound("böyle bir ürün yok");
-            
+        ProductDto product = _productService.GetProduct(id);
         return Ok(product);
     }
     [HttpPost]
-    public IActionResult CreateProduct([FromBody]Product product)
+    public IActionResult CreateProduct([FromBody]CreateProductRequest request)
     {
-        productsdb.Add(product);
-        return CreatedAtAction(nameof(Product), new { id = product.Id }, product); 
+        ProductDto newProduct = _productService.CreateProduct(request);
+        return CreatedAtAction(nameof(Product), new { id = newProduct.Id }, newProduct); 
     }
     
     [HttpPut("{id}")]
-    public IActionResult UpdateProduct([FromRoute] int id, [FromBody]Product newProduct)
+    public IActionResult UpdateProduct([FromRoute] int id, [FromBody]UpdateProductRequest product)
     {
-        Product? product = productsdb.FirstOrDefault(p => p.Id == id);
-
-        if (product is null)
-            return NotFound("böyle bir ürün yok");
-        
-        product.Name = newProduct.Name;
-        product.Price = newProduct.Price;
-        product.Stock = newProduct.Stock;
-        
+        _productService.UpdateProduct(id, product);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteProduct([FromRoute]int id)
     {
-        Product? product = productsdb.FirstOrDefault(p => p.Id == id);
-
-        if (product is null)
-            return NotFound("böyle bir ürün yok");
-
-        productsdb.Remove(product);
+        _productService.DeleteProduct(id);
         return NoContent();
     }
 }
