@@ -16,36 +16,36 @@ public class ProductController : ControllerBase
         _productService = productService;
     }
     [HttpGet]
-    public ActionResult<IEnumerable<ProductDto>> AllProducts()
+    public async Task<ActionResult<IEnumerable<ProductDto>>> AllProducts()
     {
-        IEnumerable<ProductDto> products = _productService.GetAllProducts();
+        IEnumerable<ProductDto> products = await _productService.GetAllProducts();
         return Ok(products);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Product> Product([FromRoute]int id)
+    public async Task<ActionResult<Product>> Product([FromRoute]int id)
     {
-        ProductDto product = _productService.GetProduct(id);
+        ProductDto product = await _productService.GetProduct(id);
         return Ok(product);
     }
     [HttpPost]
-    public IActionResult CreateProduct([FromBody]CreateProductRequest request)
+    public async Task<IActionResult> CreateProduct([FromBody]CreateProductRequest request)
     {
-        ProductDto newProduct = _productService.CreateProduct(request);
+        ProductDto newProduct = await _productService.CreateProduct(request);
         return CreatedAtAction(nameof(Product), new { id = newProduct.Id }, newProduct); 
     }
     
     [HttpPut("{id}")]
-    public IActionResult UpdateProduct([FromRoute] int id, [FromBody]UpdateProductRequest product)
+    public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody]UpdateProductRequest product)
     {
-        _productService.UpdateProduct(id, product);
+        await _productService.UpdateProduct(id, product);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteProduct([FromRoute]int id)
+    public async Task<IActionResult> DeleteProduct([FromRoute]int id)
     {
-        _productService.DeleteProduct(id);
+        await _productService.DeleteProduct(id);
         return NoContent();
     }
 }
