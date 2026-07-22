@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{Api_HostAddress}}/api/Product/18
+DELETE {{Api_HostAddress}}/api/Product/7
 Accept: application/json
 
 ###
